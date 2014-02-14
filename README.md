@@ -1,7 +1,10 @@
 rbuilder
 ========
 
-rbuilder is a tool that creates RPMs from specified local directories.  
+rbuilder is a tool that creates RPMs from specified local directories. 
+
+# Prerequisites
+- This must be executed froma a system with the rpmbuild command 
 
 # Example
 - Create a directory that will be turned into a RPM.  The following will create a directory with 10 files.  
