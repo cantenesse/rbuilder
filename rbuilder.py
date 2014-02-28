@@ -28,22 +28,22 @@ def get_options():
     optparser.add_option("-c", "--architecture", action="store",
                          type="string", nargs=1)
 
-(options, unparsed) = optparser.parse_args()
-
-if unparsed:
-    print("PROBLEM:"
-          "Could not parse and/or understand the following arguments:")
-    for arg in unparsed:
-        print(" - %s" % arg)
-    print()
-    parser.print_help()
-    sys.exit(-1)
-
-return (options.requires, options.application,
-        options.build_dir, options.version,
-        options.release, options.install_dir,
-        options.rpmbuild_dir, options.architecture)
-
+    (options, unparsed) = optparser.parse_args()
+    
+    if unparsed:
+        print("PROBLEM:"
+              "Could not parse and/or understand the following arguments:")
+        for arg in unparsed:
+            print(" - %s" % arg)
+        print()
+        parser.print_help()
+        sys.exit(-1)
+    
+    return (options.requires, options.application,
+            options.build_dir, options.version,
+            options.release, options.install_dir,
+            options.rpmbuild_dir, options.architecture)
+    
 
 def build_paths(rpmbuild_dir):
     rpmbuild_source = "%s/SOURCES" % rpmbuild_dir
