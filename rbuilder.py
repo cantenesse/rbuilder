@@ -10,6 +10,7 @@ from optparse import OptionParser
 sys.path.append('lib')
 from rpm import RPM
 
+
 def get_options():
     optparser = OptionParser()
 
@@ -29,7 +30,7 @@ def get_options():
                          type="string", nargs=1)
 
     (options, unparsed) = optparser.parse_args()
-    
+
     if unparsed:
         print("PROBLEM:"
               "Could not parse and/or understand the following arguments:")
@@ -38,7 +39,7 @@ def get_options():
         print()
         parser.print_help()
         sys.exit(-1)
-    
+
     return (options.requires, options.application, options.src_dir,
             options.version, options.release, options.install_dir,
             options.architecture, options.src_dir)
@@ -48,6 +49,7 @@ if __name__ == "__main__":
     (requires, application, dir_to_rpm,
      version, release, install_dir, arch, src_dir) = get_options()
 
-    rpm = RPM(application, requires, version, release, license, install_dir, arch, src_dir)
+    rpm = RPM(application, requires, version, release,
+              license, install_dir, arch, src_dir)
 
     rpm.build()

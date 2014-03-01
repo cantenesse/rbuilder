@@ -2,10 +2,12 @@ from string import Template
 import tempfile
 import os
 import tarfile
+import popen2
+
 
 class RPM():
 	def __init__(self, application, requires, version, release,
-			   license, install_dir, arch, src_dir):
+                 license, install_dir, arch, src_dir):
 		self.application = application
 		self.requires = requires
 		self.version = version
@@ -14,10 +16,12 @@ class RPM():
 		self.install_dir = install_dir
 		self.arch = arch
 		self.src_dir = src_dir
+		self.rpmbuild_env = self._create_rpmbuild_env()
 
 	def build(self):
-		self._create_source_tar()
-		spec_path = self._createspec()
+		src_tar = self._create_source_tar()
+		spec_path = self._createspec(src_tar)
+		package_name = self._create_rpm(spec_path)
 
 	def _read_template(self):
 		template_file = 'templates/spec.template'
@@ -36,20 +40,21 @@ class RPM():
 			os.makedirs("%s/%s" % (t_dir, dir))
 		
 		rpmbuild_env = dict(sources="%s/%s" % (t_dir, 'SOURCES'),
-								 specs="%s/%s" % (t_dir, 'SPECS'))
+						 	specs="%s/%s" % (t_dir, 'SPECS'),
+						 	base_dir="%s" % t_dir)
 
 		return rpmbuild_env
 
 	def _clean_build_env(self):
-		pass
+		shutil.rmtree(self.rpmbuild_env['base_dir'])
 		
-	def _createspec(self):
+	def _createspec(self, tar_filename):
 		# Creates a spec file and returns the path
 		
 		template_str = self._read_template()
-		build_env_path = self._create_rpmbuild_env()
+		rpmbuild_env = self._create_rpmbuild_env()
 	
-		d = dict(application=self.application, source=self.tar_filename, 
+		d = dict(application=self.application, source=tar_filename, 
 				 requires=self.requires, version=self.version, 
 				 release=self.release, license=self.license,
 				 install_dir=self.install_dir, arch=self.arch)
@@ -58,7 +63,7 @@ class RPM():
 		
 		s.safe_substitute(d)
 
-		spec_path = "%s/SPECS/%s.spec" % (build_env_path, application)
+		spec_path = "%s/%s.spec" % (self.rpmbuild_env['specs'], self.application)
 
 		f = open(spec_path , 'w')
 		f.write(s.safe_substitute(d))
@@ -67,13 +72,13 @@ class RPM():
 		return spec_path
 
 	def _create_source_tar(self):
-		rpmbuild_env = self._create_rpmbuild_env()
+		orig_dir = os.getcwd()
 		try:
-			os.makedirs("%s/%s/" % (rpmbuild_env['sources'], self.application))
+			os.makedirs("%s/%s/" % (self.rpmbuild_env['sources'], self.application))
 		except OSError:
 			pass
 	
-		tar = tarfile.open("%s/%s/%s.tar.gz" % (rpmbuild_env['sources'],
+		tar = tarfile.open("%s/%s/%s.tar.gz" % (self.rpmbuild_env['sources'],
     	                                        self.application,
     	                                        self.application), "w:gz")
 		os.chdir("%s" % (self.src_dir))
@@ -83,14 +88,16 @@ class RPM():
 					tar.add(join(root, file))
 		tar.close()
 		
+		os.chdir(orig_dir)
 		return "%s.tar.gz" % self.application
 
 
-	def _create_rpm(self):
+	def _create_rpm(self, spec_filename):
 		package_name = spec_filename.split('.')
 		r, w, e = popen2.popen3("rpmbuild --define '_topdir %s'\
     	                         --define '_sourcedir %s/SOURCES/%s' \
-    	                         -bb SPECS/%s.spec" % (base_dir, base_dir,
+    	                         -bb SPECS/%s.spec" % (self.rpmbuild_env['base_dir'], 
+    	                         				  	   self.rpmbuild_env['base_dir'],
     	                                               package_name[0],
     	                                               package_name[0]))
 		output = r.read()
