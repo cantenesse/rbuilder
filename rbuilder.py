@@ -1,10 +1,5 @@
 #!/usr/bin/python2
 import sys
-import os
-from os.path import join
-import tarfile
-import shutil
-import popen2
 from optparse import OptionParser
 
 sys.path.append('lib')
@@ -28,6 +23,10 @@ def get_options():
                          type="string", nargs=1)
     optparser.add_option("-c", "--architecture", action="store",
                          type="string", nargs=1)
+    optparser.add_option("-l", "--license", action="store",
+                         type="string", nargs=1)
+    optparser.add_option("-x", "--dest_dir", action="store",
+                         type="string", nargs=1)
 
     (options, unparsed) = optparser.parse_args()
 
@@ -42,12 +41,14 @@ def get_options():
 
     return (options.requires, options.application, options.src_dir,
             options.version, options.release, options.install_dir,
-            options.architecture, options.src_dir)
+            options.architecture, options.src_dir, options.license,
+            options.dest_dir)
 
 if __name__ == "__main__":
     # get options and build paths
     (requires, application, dir_to_rpm,
-     version, release, install_dir, arch, src_dir) = get_options()
+     version, release, install_dir, arch,
+     src_dir, license, dest_dir) = get_options()
 
     rpm = RPM(application, requires, version, release,
               license, install_dir, arch, src_dir)
