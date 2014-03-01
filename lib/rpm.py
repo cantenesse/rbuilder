@@ -53,9 +53,14 @@ class RPM():
 		
 		template_str = self._read_template()
 		rpmbuild_env = self._create_rpmbuild_env()
+
+		if self.requires is None:
+			requires_line = ""
+		else:
+			requires_line = "Requires: %s" % (self.requires)
 	
 		d = dict(application=self.application, source=tar_filename, 
-				 requires=self.requires, version=self.version, 
+				 requires=requires_line, version=self.version, 
 				 release=self.release, license=self.license,
 				 install_dir=self.install_dir, arch=self.arch)
 	
@@ -69,6 +74,7 @@ class RPM():
 		f.write(s.safe_substitute(d))
 		f.close()
 	
+		print s.safe_substitute(d)
 		return spec_path
 
 	def _create_source_tar(self):
