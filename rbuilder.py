@@ -51,6 +51,6 @@ if __name__ == "__main__":
      src_dir, license, dest_dir) = get_options()
 
     rpm = RPM(application, requires, version, release,
-              license, install_dir, arch, src_dir)
+              license, install_dir, arch, src_dir, dest_dir)
 
     rpm.build()

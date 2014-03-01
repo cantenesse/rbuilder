@@ -7,7 +7,7 @@ import popen2
 
 class RPM():
 	def __init__(self, application, requires, version, release,
-                 license, install_dir, arch, src_dir):
+                 license, install_dir, arch, src_dir, dest_dir):
 		self.application = application
 		self.requires = requires
 		self.version = version
@@ -16,6 +16,7 @@ class RPM():
 		self.install_dir = install_dir
 		self.arch = arch
 		self.src_dir = src_dir
+		self.dest_dir = dest_dir
 		self.rpmbuild_env = self._create_rpmbuild_env()
 
 	def build(self):
@@ -74,7 +75,6 @@ class RPM():
 		f.write(s.safe_substitute(d))
 		f.close()
 	
-		print s.safe_substitute(d)
 		return spec_path
 
 	def _create_source_tar(self):
