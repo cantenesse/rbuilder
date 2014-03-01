@@ -26,6 +26,6 @@ rsync -av . $RPM_BUILD_ROOT/$install_dir/$application/
 %defattr(0755,root,root)
 $install_dir/$application
 
-%%pre
+%pre
 
-%%post
+%post
