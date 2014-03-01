@@ -1,0 +1,31 @@
+Summary: RPM generated from $application source
+Name: $application
+Version: $version
+Release: $release
+License: $license
+Group: applications/tools
+BuildRoot: %{_tmppath}/%{name}
+Source0: $source
+$requires
+BuildArch: $arch
+
+%description
+
+%prep
+%setup -c
+
+%install
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/$install_dir/$application/
+rsync -av . $RPM_BUILD_ROOT/$install_dir/$application/
+
+%clean
+[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(0755,root,root)
+$install_dir/$application
+
+%%pre
+
+%%post
