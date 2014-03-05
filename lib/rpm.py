@@ -108,9 +108,10 @@ class RPM():
 		package_name = spec_filename.split('.')
 		r, w, e = popen2.popen3("rpmbuild --define '_topdir %s'\
     	                         --define '_sourcedir %s/SOURCES/%s' \
-    	                         -bb SPECS/%s.spec" % (self.rpmbuild_env['base_dir'], 
+    	                         -bb %s/%s.spec" % (self.rpmbuild_env['base_dir'], 
     	                         				  	   self.rpmbuild_env['base_dir'],
     	                                               package_name[0],
+    	                                               self.rpmbuild_env['specs']
     	                                               package_name[0]))
 		output = r.read()
 		error = e.read()
