@@ -22,12 +22,20 @@ class RPM():
 
 	def build(self):
 		src_tar = self._create_source_tar()
-		spec_path = self._createspec(src_tar)
-		package_name = self._create_rpm(spec_path)
+		self._createspec(src_tar)
+		self._create_rpm(self.application)
 
 	def write(self, rpm_dest_location):
-		shutil.copyfile("%s/%s" % (self.rpmbuild_env['rpms'], self.arch), rpm_dest_location)
-		_clean_build_env()
+		rpm_name = "%s-%s-%s.%s.rpm" % (self.application,
+										self.version,
+										self.release,
+										self.arch)
+		shutil.copyfile("%s/%s/%s" % (self.rpmbuild_env['rpms'],
+									  self.arch,
+									  rpm_name),
+									  "%s/%s" % (rpm_dest_location,
+									  			 rpm_name))
+		self._clean_build_env()
 
 	def _read_template(self):
 		template_file = 'templates/spec.template'
@@ -99,21 +107,17 @@ class RPM():
 				for file in files:
 					tar.add("/".join([root, file]))
 		tar.close()
-		
 		os.chdir(orig_dir)
 		return "%s.tar.gz" % self.application
 
 
-	def _create_rpm(self, spec_filename):
-		package_name = spec_filename.split('.')
+	def _create_rpm(self, application):
 		r, w, e = popen2.popen3("rpmbuild --define '_topdir %s'\
-    	                         --define '_sourcedir %s/SOURCES/%s' \
+    	                         --define '_sourcedir %s/%s' \
     	                         -bb %s/%s.spec" % (self.rpmbuild_env['base_dir'], 
-    	                         				  	   self.rpmbuild_env['base_dir'],
-    	                                               package_name[0],
-    	                                               self.rpmbuild_env['specs'],
-    	                                               package_name[0]))
+													self.rpmbuild_env['sources'],
+													application,
+													self.rpmbuild_env['specs'],
+													application))
 		output = r.read()
 		error = e.read()
-	
-		return package_name[0]
