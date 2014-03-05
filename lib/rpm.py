@@ -3,6 +3,7 @@ import tempfile
 import os
 import tarfile
 import popen2
+import shutil
 
 
 class RPM():
@@ -24,6 +25,10 @@ class RPM():
 		spec_path = self._createspec(src_tar)
 		package_name = self._create_rpm(spec_path)
 
+	def write(self, rpm_dest_location):
+		shutil.copyfile("%s/%s" % (rpmbuild_env['rpms'], self.arch), rpm_dest_location)
+		_clean_build_env()
+
 	def _read_template(self):
 		template_file = 'templates/spec.template'
 		f = open(template_file)
@@ -42,6 +47,7 @@ class RPM():
 		
 		rpmbuild_env = dict(sources="%s/%s" % (t_dir, 'SOURCES'),
 						 	specs="%s/%s" % (t_dir, 'SPECS'),
+						 	rpms="%s/%s" % (t_dir, 'RPMS'),
 						 	base_dir="%s" % t_dir)
 
 		return rpmbuild_env
@@ -91,7 +97,7 @@ class RPM():
 		for root, dirs, files in os.walk("."):
 			if '.git' not in root:
 				for file in files:
-					tar.add(join(root, file))
+					tar.add("/".join([root, file]))
 		tar.close()
 		
 		os.chdir(orig_dir)

@@ -53,4 +53,6 @@ if __name__ == "__main__":
     rpm = RPM(application, requires, version, release,
               license, install_dir, arch, src_dir, dest_dir)
 
+    # build the RPM, write it to dest_dir
     rpm.build()
+    rpm.write(dest_dir)
