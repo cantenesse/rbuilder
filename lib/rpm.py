@@ -26,7 +26,7 @@ class RPM():
 		package_name = self._create_rpm(spec_path)
 
 	def write(self, rpm_dest_location):
-		shutil.copyfile("%s/%s" % (rpmbuild_env['rpms'], self.arch), rpm_dest_location)
+		shutil.copyfile("%s/%s" % (self.rpmbuild_env['rpms'], self.arch), rpm_dest_location)
 		_clean_build_env()
 
 	def _read_template(self):
