@@ -38,7 +38,7 @@ class RPM():
 		self._clean_build_env()
 
 	def _read_template(self):
-		template_file = 'templates/spec.template'
+		template_file = '/usr/local/rbuilder/templates/spec.template'
 		f = open(template_file)
 		template_str = f.read()
 		f.close()
