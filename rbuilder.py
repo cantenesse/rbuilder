@@ -3,7 +3,7 @@ import sys
 from optparse import OptionParser
 
 sys.path.append('/usr/local/rbuilder/lib')
-from rpm import RPM
+from rpmbuild import RPM
 
 
 def get_options():
