@@ -50,7 +50,7 @@ if __name__ == "__main__":
     # get options and build paths
     (requires, application, dir_to_rpm,
      version, release, install_dir, arch,
-     src_dir, license, dest_dir) = get_options()
+     src_dir, license, dest_dir, print_version) = get_options()
 
     if print_version:
         print '1.0.3'
