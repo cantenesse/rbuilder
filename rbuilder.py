@@ -15,8 +15,8 @@ def get_options():
                          type="string", nargs=1)
     optparser.add_option("-d", "--src_dir", action="store",
                          type="string", nargs=1)
-    optparser.add_option("-v", "--version", action="store",
-                         type="string", nargs=1)
+    optparser.add_option("-v", "--version", action="store_true",
+                         default=False)
     optparser.add_option("-R", "--release", action="store",
                          type="string", nargs=1)
     optparser.add_option("-i", "--install_dir", action="store",
@@ -49,6 +49,10 @@ if __name__ == "__main__":
     (requires, application, dir_to_rpm,
      version, release, install_dir, arch,
      src_dir, license, dest_dir) = get_options()
+
+    if version:
+        print '1.0.3'
+        sys.exit()
 
     rpm = RPM(application, requires, version, release,
               license, install_dir, arch, src_dir, dest_dir)
