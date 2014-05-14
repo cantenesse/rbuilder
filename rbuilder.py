@@ -16,7 +16,7 @@ def get_options():
     optparser.add_option("-d", "--src_dir", action="store",
                          type="string", nargs=1)
     optparser.add_option("-v", "--version", action="store_true",
-                         default=False)
+                         type="string", nargs=1)
     optparser.add_option("-R", "--release", action="store",
                          type="string", nargs=1)
     optparser.add_option("-i", "--install_dir", action="store",
@@ -27,6 +27,8 @@ def get_options():
                          type="string", nargs=1)
     optparser.add_option("-x", "--dest_dir", action="store",
                          type="string", nargs=1)
+    optparser.add_option("-p", "--print_version", action="store_true",
+                         default=False)
 
     (options, unparsed) = optparser.parse_args()
 
@@ -42,7 +44,7 @@ def get_options():
     return (options.requires, options.application, options.src_dir,
             options.version, options.release, options.install_dir,
             options.architecture, options.src_dir, options.license,
-            options.dest_dir)
+            options.dest_dir, options.print_version)
 
 if __name__ == "__main__":
     # get options and build paths
@@ -50,7 +52,7 @@ if __name__ == "__main__":
      version, release, install_dir, arch,
      src_dir, license, dest_dir) = get_options()
 
-    if version:
+    if print_version:
         print '1.0.3'
         sys.exit()
 
