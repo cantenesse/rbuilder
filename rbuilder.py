@@ -36,7 +36,7 @@ def get_options():
         for arg in unparsed:
             print(" - %s" % arg)
         print()
-        parser.print_help()
+        optparser.print_help()
         sys.exit(-1)
 
     return (options.requires, options.application, options.src_dir,
