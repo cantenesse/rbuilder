@@ -15,7 +15,7 @@ def get_options():
                          type="string", nargs=1)
     optparser.add_option("-d", "--src_dir", action="store",
                          type="string", nargs=1)
-    optparser.add_option("-v", "--version", action="store_true",
+    optparser.add_option("-v", "--version", action="store",
                          type="string", nargs=1)
     optparser.add_option("-R", "--release", action="store",
                          type="string", nargs=1)
